@@ -200,6 +200,36 @@
 
   const api = { play: () => playOnce(false), playSwitch: () => playOnce(true) };
   
+  // 支持指定特定效果播放
+  api.play = function(effectName){
+    const effectMap = {
+      'circleWipe': 0,
+      'verticalShutter': 1,
+      'horizontalShutter': 2,
+      'irisWipe': 3
+    };
+    
+    if(effectName && effectMap[effectName] !== undefined){
+      // 临时保存原配置
+      const originalWeights = [...CONFIG.GLOBAL.effectWeights];
+      // 设置只播放指定效果
+      CONFIG.GLOBAL.effectWeights = [0, 0, 0, 0];
+      CONFIG.GLOBAL.effectWeights[effectMap[effectName]] = 1;
+      // 播放
+      const promise = playOnce(false);
+      // 恢复原配置
+      setTimeout(() => {
+        CONFIG.GLOBAL.effectWeights = originalWeights;
+      }, 100);
+      return promise;
+    } else {
+      // 默认随机播放
+      return playOnce(false);
+    }
+  };
+  
+  api.playSwitch = () => playOnce(true);
+  
   // 动态配置接口
   api.setConfig = function(cfg){
     if(cfg.baseDuration !== undefined) CONFIG.GLOBAL.baseDuration = cfg.baseDuration;

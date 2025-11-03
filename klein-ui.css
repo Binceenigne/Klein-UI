@@ -350,3 +350,39 @@ body {
 .modal-fullscreen .modal-content { max-width: 96vw; max-height: 96vh; padding: 40px; }
 .modal-fullscreen .modal-close { position: absolute; top: 20px; right: 20px; }
 
+/* 导览系统 */
+.tour-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; animation: fadeIn 0.4s var(--ease-out); }
+.tour-overlay.active { display: flex; }
+.tour-card { position: relative; background: var(--white); border-radius: var(--radius-lg); border: 6px solid var(--black); box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-width: 700px; width: 90%; padding: 40px; animation: tourSlideIn 0.6s var(--ease-out); max-height: 90vh; overflow-y: auto; }
+.tour-header { text-align: center; margin-bottom: 32px; }
+.tour-badge { display: inline-block; background: var(--klein-blue); color: var(--text-on-primary); padding: 8px 20px; border-radius: 999px; border: 3px solid var(--black); font-weight: 800; font-size: 0.85rem; margin-bottom: 16px; }
+.tour-title { font-size: 2.2rem; font-weight: 900; margin-bottom: 12px; color: var(--text-primary); }
+.tour-subtitle { font-size: 1.1rem; color: var(--text-secondary); font-weight: 600; line-height: 1.5; }
+.tour-content { margin-bottom: 32px; }
+
+/* 导览互动演示区 */
+.tour-demo { background: var(--gray-100); border-radius: var(--radius-md); border: 4px solid var(--black); padding: 24px; margin-bottom: 20px; }
+.tour-demo-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+.tour-demo-title i { color: var(--klein-blue); }
+.tour-color-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-top: 16px; }
+.tour-color-sample { aspect-ratio: 1; border-radius: var(--radius-sm); border: 3px solid var(--black); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); }
+.tour-color-sample:hover { transform: translateY(-4px) rotate(2deg); box-shadow: var(--shadow-lg); }
+.tour-components-grid { display: grid; gap: 16px; margin-top: 16px; }
+.tour-component-item { padding: 16px; background: var(--white); border-radius: var(--radius-sm); border: 3px solid var(--black); box-shadow: var(--shadow-sm); }
+.tour-switch-demo { display: flex; align-items: center; justify-content: space-between; }
+.tour-animations-demo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; }
+.tour-anim-btn { padding: 16px; background: var(--klein-blue-100); border-radius: var(--radius-sm); border: 3px solid var(--black); font-weight: 700; text-align: center; cursor: pointer; transition: var(--transition); }
+.tour-anim-btn:hover { background: var(--klein-blue-200); transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.tour-anim-btn i { display: block; font-size: 1.8rem; margin-bottom: 8px; color: var(--klein-blue); }
+
+.tour-footer { display: flex; gap: 12px; justify-content: center; }
+.tour-progress { text-align: center; margin-bottom: 20px; }
+.tour-dots { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
+.tour-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--gray-300); border: 2px solid var(--black); transition: var(--transition); cursor: pointer; }
+.tour-dot:hover { transform: scale(1.2); }
+.tour-dot.active { background: var(--klein-blue); transform: scale(1.3); }
+.tour-page-indicator { font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); }
+
+@keyframes tourSlideIn { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes tourFeaturePop { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+

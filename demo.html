@@ -158,6 +158,7 @@
             <span class="tooltip">这是一个 Tooltip 示例</span>
           </span>
         </button>
+        <button class="btn-secondary" id="triggerTour"><i class="fas fa-compass"></i> 重新导览</button>
       </div>
 
       <!-- 上传演示区域 -->
@@ -222,6 +223,13 @@
             <button class="btn-secondary" onclick="document.getElementById('confirmModal').style.display='none'">取消</button>
             <button class="btn-primary" onclick="UI.notice('已确认操作'); document.getElementById('confirmModal').style.display='none';">确认</button>
           </div>
+        </div>
+      </div>
+
+      <!-- 导览系统 -->
+      <div class="tour-overlay" id="tourOverlay">
+        <div class="tour-card" id="tourCard">
+          <!-- 动态内容由 JS 填充 -->
         </div>
       </div>
     </main>

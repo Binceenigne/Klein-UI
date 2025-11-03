@@ -27,6 +27,7 @@ const UI = {
     this.els.triggerNotice = document.getElementById('triggerNotice');
     this.els.triggerLightbox = document.getElementById('triggerLightbox');
     this.els.triggerModal = document.getElementById('triggerModal');
+    this.els.triggerTour = document.getElementById('triggerTour');
     this.els.uploadTitle = document.querySelector('#uploadArea h3');
     this.els.uploadInfo = document.querySelector('#uploadArea p');
     this.state = { items: [] };
@@ -63,6 +64,7 @@ const UI = {
     E.triggerToast?.addEventListener('click', ()=> this.toast('这是一个演示 Toast'));
     E.triggerNotice?.addEventListener('click', ()=> this.notice('演示 Notice：底部气泡提示'));
     E.triggerModal?.addEventListener('click', ()=> document.getElementById('confirmModal').style.display='flex');
+    E.triggerTour?.addEventListener('click', ()=> this.startTour());
     E.triggerLightbox?.addEventListener('click', ()=>{
       if(this.state.items[0]) this.openLightbox(this.state.items[0].url);
       else this.openLightbox('data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1E40FF"/><stop offset="100%" stop-color="#4D6CFF"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/></svg>'));
@@ -73,6 +75,9 @@ const UI = {
 
     // 初始 FAB 显示状态
     this.updateFab();
+
+    // 检查是否首次访问
+    this.checkFirstVisit();
   },
   bindConfigPanel() {
     // 折叠面板控制
@@ -334,7 +339,222 @@ const UI = {
   },
   openLightbox(src){ const E = this.els; if(!E.lightbox||!E.lightboxImg) return; E.lightboxImg.src = src; E.lightbox.style.display='block'; },
   closeLightbox(){ const E = this.els; if(!E.lightbox||!E.lightboxImg) return; E.lightbox.style.display='none'; E.lightboxImg.src=''; },
-  updateFab(){ const E = this.els; if(!E.sidebar||!E.sidebarFab) return; const collapsed = E.sidebar.classList.contains('collapsed'); E.sidebarFab.classList.toggle('show', collapsed); }
+  updateFab(){ const E = this.els; if(!E.sidebar||!E.sidebarFab) return; const collapsed = E.sidebar.classList.contains('collapsed'); E.sidebarFab.classList.toggle('show', collapsed); },
+  
+  // 导览系统
+  checkFirstVisit() {
+    const hasVisited = localStorage.getItem('klein-ui-visited');
+    if (!hasVisited) {
+      setTimeout(() => this.startTour(), 800);
+      localStorage.setItem('klein-ui-visited', 'true');
+    }
+  },
+  startTour() {
+    this.tourPages = [
+      {
+        badge: '欢迎',
+        title: '✨ Klein UI Template',
+        subtitle: '现代波普风格 + 粗黑边框 + 动态背景<br>点击下方色块体验智能配色!',
+        type: 'colors',
+        colors: [
+          { name: 'Klein Blue', hex: '#1E40FF' },
+          { name: 'Hot Pink', hex: '#FF006E' },
+          { name: 'Electric', hex: '#8338EC' },
+          { name: 'Cyber Yellow', hex: '#FFBE0B' },
+          { name: 'Mint Green', hex: '#06FFA5' },
+          { name: 'Sunset', hex: '#FB5607' },
+          { name: 'Royal Purple', hex: '#7209B7' },
+          { name: 'Ocean Blue', hex: '#3A86FF' }
+        ]
+      },
+      {
+        badge: '组件展示',
+        title: '🎨 波普风格组件',
+        subtitle: '粗边框 + 偏移阴影 + 交互动画<br>试试下面的开关和按钮!',
+        type: 'components'
+      },
+      {
+        badge: '转场动画',
+        title: '⚡ 炫酷页面转场',
+        subtitle: 'Web Animations API + 火花粒子系统<br>点击体验4种转场效果!',
+        type: 'animations'
+      },
+      {
+        badge: '开始使用',
+        title: '🚀 快速上手',
+        subtitle: '三个文件 · 零依赖 · 开箱即用',
+        type: 'start',
+        files: [
+          { icon: 'file-code', name: 'klein-ui.css', desc: '核心样式 - 所有组件和动画定义' },
+          { icon: 'file-code', name: 'background.js', desc: '背景系统 - 3种图案 + 实时配置' },
+          { icon: 'file-code', name: 'transitions.js', desc: '转场引擎 - 4种效果 + 粒子系统' },
+          { icon: 'book', name: 'README.md', desc: '完整文档 - API说明和配置选项' }
+        ]
+      }
+    ];
+    this.currentTourPage = 0;
+    this.renderTour();
+    document.getElementById('tourOverlay').classList.add('active');
+  },
+  renderTour() {
+    const page = this.tourPages[this.currentTourPage];
+    const total = this.tourPages.length;
+    const tourCard = document.getElementById('tourCard');
+    
+    let contentHTML = '';
+    
+    // 根据页面类型生成不同的演示内容
+    if (page.type === 'colors') {
+      contentHTML = `
+        <div class="tour-demo">
+          <div class="tour-demo-title"><i class="fas fa-palette"></i> 点击色块查看智能配色效果</div>
+          <div class="tour-color-grid">
+            ${page.colors.map(c => `
+              <div class="tour-color-sample" style="background:${c.hex}; color:${this.getTextColor(c.hex)};" 
+                   onclick="UI.applyThemeColor('custom', '${c.hex}'); UI.toast('已切换到 ${c.name}')">
+                ${c.name}
+              </div>
+            `).join('')}
+          </div>
+          <p style="margin-top:16px; font-size:0.9rem; color:var(--text-secondary); text-align:center;">
+            <i class="fas fa-lightbulb"></i> 文字颜色会根据背景亮度自动调整为黑色或白色
+          </p>
+        </div>
+      `;
+    } else if (page.type === 'components') {
+      contentHTML = `
+        <div class="tour-demo">
+          <div class="tour-components-grid">
+            <div class="tour-component-item">
+              <div class="switch-group" style="margin-bottom:0;">
+                <span class="switch-label">iOS 风格开关</span>
+                <label class="switch">
+                  <input type="checkbox" id="tourSwitch1" onchange="UI.toast(this.checked ? '✅ 已开启' : '⭕ 已关闭')">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="tour-component-item">
+              <div class="switch-group" style="margin-bottom:0;">
+                <span class="switch-label">🌙 夜间模式</span>
+                <label class="switch">
+                  <input type="checkbox" id="tourSwitch2" checked onchange="UI.toast(this.checked ? '🌙 已切换到夜间模式' : '☀️ 已切换到日间模式')">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="tour-component-item" style="display:flex; gap:12px;">
+              <button class="btn-primary" onclick="UI.toast('Primary 按钮点击')"><i class="fas fa-star"></i> Primary</button>
+              <button class="btn-secondary" onclick="UI.toast('Secondary 按钮点击')"><i class="fas fa-heart"></i> Secondary</button>
+            </div>
+            <div class="tour-component-item">
+              <div class="tooltip-container" style="width:100%; text-align:center;">
+                <button class="btn-secondary" style="width:100%;"><i class="fas fa-info-circle"></i> 悬停查看提示</button>
+                <span class="tooltip">这就是 Tooltip 悬浮提示!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (page.type === 'animations') {
+      contentHTML = `
+        <div class="tour-demo">
+          <div class="tour-animations-demo">
+            <div class="tour-anim-btn" onclick="window.KleinTransition?.play('circleWipe'); UI.toast('播放: 圆形扩散')">
+              <i class="fas fa-circle-notch"></i>
+              圆形扩散
+            </div>
+            <div class="tour-anim-btn" onclick="window.KleinTransition?.play('verticalShutter'); UI.toast('播放: 水平快门')">
+              <i class="fas fa-grip-lines"></i>
+              水平快门
+            </div>
+            <div class="tour-anim-btn" onclick="window.KleinTransition?.play('horizontalShutter'); UI.toast('播放: 垂直快门')">
+              
+              <i class="fas fa-grip-lines-vertical"></i>
+              垂直快门
+            </div>
+            <div class="tour-anim-btn" onclick="window.KleinTransition?.play('irisWipe'); UI.toast('播放: 光圈收缩')">
+              <i class="fas fa-circle"></i>
+              光圈收缩
+            </div>
+          </div>
+          <p style="margin-top:16px; font-size:0.9rem; color:var(--text-secondary); text-align:center;">
+            <i class="fas fa-sparkles"></i> 带火花粒子特效,可在配置面板调整转场权重
+          </p>
+        </div>
+      `;
+    } else if (page.type === 'start') {
+      contentHTML = `
+        <div class="tour-demo">
+          <div class="tour-components-grid">
+            ${page.files.map(f => `
+              <div class="tour-component-item" style="display:flex; gap:16px; align-items:center;">
+                <div style="font-size:2rem; color:var(--klein-blue);"><i class="fas fa-${f.icon}"></i></div>
+                <div style="flex:1;">
+                  <h3 style="font-weight:800; margin-bottom:4px;">${f.name}</h3>
+                  <p style="font-size:0.9rem; color:var(--text-secondary);">${f.desc}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <p style="margin-top:20px; font-size:0.95rem; color:var(--text-secondary); text-align:center; line-height:1.6;">
+            引入这三个文件即可使用完整功能!<br>
+            查看 <strong>README.md</strong> 了解详细 API 文档
+          </p>
+        </div>
+      `;
+    }
+    
+    tourCard.innerHTML = `
+      <div class="tour-header">
+        <div class="tour-badge">${page.badge}</div>
+        <h2 class="tour-title">${page.title}</h2>
+        <p class="tour-subtitle">${page.subtitle}</p>
+      </div>
+      <div class="tour-content">
+        ${contentHTML}
+      </div>
+      <div class="tour-progress">
+        <div class="tour-dots">
+          ${this.tourPages.map((_, i) => `<div class="tour-dot ${i === this.currentTourPage ? 'active' : ''}" onclick="UI.goToTourPage(${i})"></div>`).join('')}
+        </div>
+        <div class="tour-page-indicator">${this.currentTourPage + 1} / ${total}</div>
+      </div>
+      <div class="tour-footer">
+        ${this.currentTourPage > 0 ? '<button class="btn-secondary" onclick="UI.prevTourPage()"><i class="fas fa-arrow-left"></i> 上一页</button>' : ''}
+        ${this.currentTourPage < total - 1 
+          ? '<button class="btn-primary" onclick="UI.nextTourPage()">下一页 <i class="fas fa-arrow-right"></i></button>'
+          : '<button class="btn-primary" onclick="UI.closeTour()"><i class="fas fa-check"></i> 开始使用</button>'
+        }
+      </div>
+    `;
+  },
+  getTextColor(hex) {
+    const rgb = this.hexToRgb(hex);
+    if (!rgb) return '#000';
+    const luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+    return luminance > 160 ? '#000' : '#fff';
+  },
+  nextTourPage() {
+    if (this.currentTourPage < this.tourPages.length - 1) {
+      this.currentTourPage++;
+      this.renderTour();
+    }
+  },
+  prevTourPage() {
+    if (this.currentTourPage > 0) {
+      this.currentTourPage--;
+      this.renderTour();
+    }
+  },
+  goToTourPage(index) {
+    this.currentTourPage = index;
+    this.renderTour();
+  },
+  closeTour() {
+    document.getElementById('tourOverlay').classList.remove('active');
+    this.notice('欢迎使用 Klein UI! 🎉');
+  }
 };
 
 document.addEventListener('DOMContentLoaded', ()=> UI.init());
