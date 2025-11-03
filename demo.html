@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Klein UI Template Demo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="./klein-ui.css" />
+</head>
+<body>
+  <!-- 左侧侧栏（演示） -->
+  <aside class="sidebar collapsed" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">演示侧栏</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="展开/收起"><i class="fas fa-angle-left"></i></button>
+      </div>
+    </div>
+    <ul class="history-list" id="historyList">
+      <li class="history-item"><div class="history-thumb"><i class="fas fa-image"></i></div><div><div class="history-title">示例条目</div><div class="history-meta">Just now</div></div><button class="history-delete"><i class="fas fa-times"></i></button></li>
+    </ul>
+  </aside>
+
+  <!-- 悬浮入口按钮 -->
+  <button id="sidebarFab" class="show"><i class="fas fa-bars"></i></button>
+
+  <div class="container">
+    <header class="header">
+      <div class="title-block">
+        <h1 class="brand">Klein UI</h1>
+        <div class="tagline">动态背景 · 转场动画 · 现代组件</div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="badge" id="triggerTransition"><i class="fas fa-clapperboard"></i>&nbsp;触发转场</button>
+      </div>
+    </header>
+
+    <!-- 装饰元素（可删） -->
+    <div class="decorations" aria-hidden="true">
+      <div class="ring ring-lg"></div>
+      <div class="ring ring-sm"></div>
+      <div class="blue-block block-1"></div>
+      <div class="blue-block block-2"></div>
+      <div class="corner-circle"></div>
+    </div>
+
+    <main class="main-content">
+      <!-- 配置面板 -->
+      <div class="config-panel">
+        <div class="config-panel-title"><i class="fas fa-sliders"></i> 动态配置面板</div>
+        
+        <!-- 主题颜色选择（始终展开） -->
+        <div class="config-section">
+          <div class="theme-picker">
+            <span class="theme-picker-label"><i class="fas fa-palette"></i> 主题颜色</span>
+            <div class="theme-swatch active" data-color="klein-blue" style="background: #1E40FF;" title="克莱因蓝"></div>
+            <div class="theme-swatch" data-color="purple" style="background: #AF52DE;" title="紫色"></div>
+            <div class="theme-swatch" data-color="pink" style="background: #FF2D55;" title="粉色"></div>
+            <div class="theme-swatch" data-color="orange" style="background: #FF9500;" title="橙色"></div>
+            <div class="theme-swatch" data-color="green" style="background: #34C759;" title="绿色"></div>
+            <div class="theme-swatch" data-color="teal" style="background: #5AC8FA;" title="青色"></div>
+            <div class="theme-swatch" data-color="indigo" style="background: #5856D6;" title="靛蓝"></div>
+            <div class="theme-swatch" data-color="sunset" style="background: linear-gradient(135deg, #FF6B6B, #FFD93D);" title="日落渐变"></div>
+            <div class="color-picker-wrapper">
+              <input type="color" id="customColorPicker" class="color-picker-input" value="#1E40FF" title="自定义颜色">
+              <span class="color-picker-label">自定义</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 背景效果控制（可折叠） -->
+        <div class="config-section">
+          <div class="collapse-trigger active" data-target="bgSettings">
+            <span><i class="fas fa-image"></i> 背景效果设置</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="collapsible expanded" id="bgSettings" style="max-height: 500px;">
+            <div class="slider-group">
+              <div class="slider-label"><span>网格密度</span><span class="slider-value" id="bgDensityValue">35</span></div>
+              <input type="range" min="20" max="60" value="35" class="slider" id="bgDensity">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>不透明度</span><span class="slider-value" id="bgOpacityValue">10%</span></div>
+              <input type="range" min="5" max="20" value="10" class="slider" id="bgOpacity">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>线条/点粗细</span><span class="slider-value" id="bgThicknessValue">2.0</span></div>
+              <input type="range" min="1" max="5" value="2" step="0.1" class="slider" id="bgThickness">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>漂移速度</span><span class="slider-value" id="bgDriftValue">1.0x</span></div>
+              <input type="range" min="0.3" max="2.5" value="1.0" step="0.1" class="slider" id="bgDrift">
+            </div>
+            <div class="config-section-title" style="font-size: 0.95rem; margin-top: 16px;">图案类型</div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <input type="radio" name="bgPattern" value="grid" checked> 网格
+              </label>
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <input type="radio" name="bgPattern" value="dots"> 圆点
+              </label>
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <input type="radio" name="bgPattern" value="cross"> 十字
+              </label>
+            </div>
+            <div class="switch-group">
+              <span class="switch-label">显示几何图形</span>
+              <label class="switch"><input type="checkbox" id="bgShapesToggle" checked><span class="switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 转场效果控制（可折叠） -->
+        <div class="config-section">
+          <div class="collapse-trigger active" data-target="transSettings">
+            <span><i class="fas fa-clapperboard"></i> 转场动画设置</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="collapsible expanded" id="transSettings" style="max-height: 600px;">
+            <div class="slider-group">
+              <div class="slider-label"><span>动画速度</span><span class="slider-value" id="transSpeedValue">650ms</span></div>
+              <input type="range" min="300" max="1200" value="650" step="50" class="slider" id="transSpeed">
+            </div>
+            <div class="switch-group">
+              <span class="switch-label">火花特效</span>
+              <label class="switch"><input type="checkbox" id="transSparksToggle" checked><span class="switch-slider"></span></label>
+            </div>
+            <div class="config-section-title" style="font-size: 0.95rem; margin-top: 16px;">效果权重</div>
+            <div class="slider-group">
+              <div class="slider-label"><span>圆形扩散</span><span class="slider-value" id="weightCircleValue">1.0</span></div>
+              <input type="range" min="0" max="3" value="1" step="0.1" class="slider" id="weightCircle">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>垂直百叶窗</span><span class="slider-value" id="weightVerticalValue">1.0</span></div>
+              <input type="range" min="0" max="3" value="1" step="0.1" class="slider" id="weightVertical">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>水平百叶窗</span><span class="slider-value" id="weightHorizontalValue">1.0</span></div>
+              <input type="range" min="0" max="3" value="1" step="0.1" class="slider" id="weightHorizontal">
+            </div>
+            <div class="slider-group">
+              <div class="slider-label"><span>光圈收缩</span><span class="slider-value" id="weightIrisValue">1.0</span></div>
+              <input type="range" min="0" max="3" value="1" step="0.1" class="slider" id="weightIris">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+        <button class="btn-secondary" id="triggerSwitch"><i class="fas fa-right-left"></i> 切换转场</button>
+        <button class="btn-secondary" id="triggerToast"><i class="fas fa-bell"></i> 显示 Toast</button>
+        <button class="btn-secondary" id="triggerNotice"><i class="fas fa-comment"></i> 显示 Notice</button>
+        <button class="btn-secondary" id="triggerLightbox"><i class="fas fa-magnifying-glass"></i> 打开 Lightbox</button>
+        <button class="btn-secondary" id="triggerModal"><i class="fas fa-window-maximize"></i> 确认对话框</button>
+        <button class="btn-secondary" id="triggerTooltip"><i class="fas fa-info-circle"></i> 
+          <span class="tooltip-container">
+            悬浮提示
+            <span class="tooltip">这是一个 Tooltip 示例</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- 上传演示区域 -->
+      <div class="upload-section">
+        <div class="upload-area" id="uploadArea" role="button" aria-label="上传图片">
+          <div class="upload-content">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 15V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3><i class="fas fa-cloud-upload-alt"></i> 拖拽图片到此处或点击上传</h3>
+            <p><i class="fas fa-info-circle"></i> 支持 JPG、PNG、JPEG 格式，单张建议不超过 5MB</p>
+            <button class="btn-primary" id="selectFileBtn"><i class="fas fa-images"></i> 选择图片</button>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" multiple hidden>
+        </div>
+        <div class="preview-container" id="previewContainer"></div>
+      </div>
+
+      <!-- 通用信息面板示例 -->
+      <section class="panel-section">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fas fa-circle-info"></i> 信息面板示例</div>
+          <span class="status-badge status-success">状态 · OK</span>
+        </div>
+        <div class="panel-card">
+          <p class="result-text">这是一个与业务无关的通用信息卡片。你可以在这里放置任何内容，如：表单结果、JSON 数据片段、分析结论等。</p>
+          <details style="margin-top: 12px;">
+            <summary style="cursor:pointer; font-weight:700;">查看示例 JSON</summary>
+            <pre class="result-json">{
+  "demo": true,
+  "components": ["背景", "转场", "Toast", "Notice", "Lightbox", "Sidebar"],
+  "style": "klein-ui.css"
+}</pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- Lightbox -->
+      <div class="lightbox" id="lightbox">
+        <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+        <div class="lightbox-content">
+          <button class="lightbox-close" id="lightboxClose" aria-label="关闭"><i class="fas fa-times"></i></button>
+          <img id="lightboxImage" alt="预览大图" />
+        </div>
+      </div>
+
+      <!-- 确认对话框示例 -->
+      <div class="modal modal-confirm danger" id="confirmModal" style="display:none;">
+        <div class="modal-backdrop" onclick="document.getElementById('confirmModal').style.display='none'"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">确认操作</div>
+            <button class="modal-close" onclick="document.getElementById('confirmModal').style.display='none'"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="modal-body">
+            <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <p>您确定要执行此操作吗?这是一个演示对话框。</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary" onclick="document.getElementById('confirmModal').style.display='none'">取消</button>
+            <button class="btn-primary" onclick="UI.notice('已确认操作'); document.getElementById('confirmModal').style.display='none';">确认</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p><i class="fas fa-bolt"></i> Powered by Klein UI Template</p>
+      <p style="font-size: 10px; color: #b1b1b1;">Demo Showcase 2025</p>
+    </footer>
+  </div>
+
+  <!-- 全局提示条 -->
+  <div id="noticeBar" class="notice" style="display:none;"></div>
+
+  <!-- 脚本：背景/转场/交互 -->
+  <script src="./background.js"></script>
+  <script src="./transitions.js"></script>
+  <script src="./template.js"></script>
+</body>
+</html>
